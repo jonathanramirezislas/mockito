@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,8 +29,6 @@ class ExamenServiceImplTest {
 
     @Test
     void findExamenPorNombre(){
-
-
         when(repository.findAll()).thenReturn(Datos.EXAMENES);//cuando se invoque find all metodo repository retorna Datos.EXAMENES
         Optional<Examen> examen = service.findExamenPorNombre("Matematicas");
 
@@ -37,6 +37,17 @@ class ExamenServiceImplTest {
         assertEquals("Matematicas", examen.get().getNombre());
 
     }
+
+    @Test
+    void findExamenPorNombreListaVacia() {
+        List<Examen> datos = Collections.emptyList();
+
+        when(repository.findAll()).thenReturn(datos);
+        Optional<Examen> examen = service.findExamenPorNombre("Matemáticas");
+
+        assertFalse(examen.isPresent());
+    }
+
 
 }
 
