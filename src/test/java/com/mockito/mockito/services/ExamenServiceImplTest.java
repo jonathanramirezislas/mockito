@@ -31,6 +31,16 @@ class ExamenServiceImplTest {
     @InjectMocks
     ExamenServiceImpl service;
 
+    @BeforeEach
+    void setUp() {
+//        MockitoAnnotations.openMocks(this); //otra forma de permitir injection de mocks
+//       //siguiente codigo en caos de qu eno se quiera usar injectiones( Mocks, InjectionMocks)
+//        repository = mock(ExamenRepository.class);
+//        preguntaRepository = mock(PreguntaRepository.class);
+//        service = new ExamenServiceImpl(repository, preguntaRepository);
+    }
+
+
     @Test
     void findExamenPorNombre(){
         when(repository.findAll()).thenReturn(Datos.EXAMENES);//cuando se invoque find all metodo repository retorna Datos.EXAMENES
