@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) //habilitamos la ijection de independecia sy mas
@@ -54,8 +55,8 @@ class ExamenServiceImplTest {
     @Test
     void testPreguntasExamen() {
         when(repository.findAll()).thenReturn(Datos.EXAMENES);//cuando se llame findAll retorna Examenes
-        when(preguntaRepository.findPreguntasPorExamenId(1L)).thenReturn(Datos.PREGUNTAS); //cuando se llame findPreguntas... con 1L retorna Preguntas otra forma retorna null
-        Examen examen = service.findExamenPorNombreConPreguntas("Matematicas"); //Matematicas tiene el ID 1L
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(Datos.PREGUNTAS); //cuando se llame findPreguntas... con cualquier ID retorna Preguntas otra forma retorna null
+        Examen examen = service.findExamenPorNombreConPreguntas("Matematicas"); //Matematicas  ->INVOCARA findAll, findExamenConPreguntas
         assertEquals(5, examen.getPreguntas().size()); //hasta a hora son 5 preguntas en el examen de matematicas
         assertTrue(examen.getPreguntas().contains("integrales"));//almenos debe contener integrales
 
