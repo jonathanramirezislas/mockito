@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -101,8 +101,27 @@ class ExamenServiceImplTest {
        // verify(preguntaRepository).findPreguntasPorExamenId(5L); //daria error ya que no se debe de invocar este motodo
     }
 
+    @Test
+    void testGuardarExamen() {
+        //creacion de ibjeto examen con sus preguntas
+        Examen newExamen = Datos.EXAMEN;
+        newExamen.setPreguntas(Datos.PREGUNTAS);
+
+        //cuando en repositorio se llame el metodo guardar retorna el examen simulando que se guardo
+        when(repository.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+
+
+        Examen examen = service.guardar(newExamen);
+
+        assertNotNull(examen.getId());
+        assertEquals(4L, examen.getId());
+        assertEquals("Historia", examen.getNombre());
+
+        //Verififcacion de llamado de metodos con cualquiero objeto examen y una lista
+        verify(repository).guardar(any(Examen.class));
+        verify(preguntaRepository).guardarVarias(anyList());
+    }
+
+
 }
 
-/*
-
- */
