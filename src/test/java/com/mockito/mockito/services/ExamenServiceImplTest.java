@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 
 import java.util.Collections;
@@ -108,8 +110,17 @@ class ExamenServiceImplTest {
         newExamen.setPreguntas(Datos.PREGUNTAS);
 
         //cuando en repositorio se llame el metodo guardar retorna el examen simulando que se guardo
-        when(repository.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        when(repository.guardar(any(Examen.class))).then(new Answer<Examen>(){
 
+            Long secuencia = 4L;
+
+            @Override
+            public Examen answer(InvocationOnMock invocation) {
+                Examen examen = invocation.getArgument(0);//obtener examen pasado por parametros
+                examen.setId(secuencia++);
+                return examen;
+            }
+        });
 
         Examen examen = service.guardar(newExamen);
 

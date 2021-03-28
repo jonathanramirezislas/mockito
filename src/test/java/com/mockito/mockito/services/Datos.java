@@ -16,7 +16,7 @@ public class Datos {
             "derivadas", "trigonometría", "geometría");
 
 
-    public final static Examen EXAMEN = new Examen(4L, "Historia");
+    public final static Examen EXAMEN = new Examen(null, "Historia");
 
 
 }
