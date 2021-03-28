@@ -2,6 +2,7 @@ package com.mockito.mockito.services;
 
 import com.mockito.mockito.models.Examen;
 import com.mockito.mockito.repositories.ExamenRepository;
+import com.mockito.mockito.repositories.PreguntaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,8 @@ class ExamenServiceImplTest {
     @Mock
     ExamenRepository repository;
 
+    @Mock
+    PreguntaRepository preguntaRepository;
 
 
     @InjectMocks
@@ -42,12 +45,21 @@ class ExamenServiceImplTest {
     void findExamenPorNombreListaVacia() {
         List<Examen> datos = Collections.emptyList();
 
-        when(repository.findAll()).thenReturn(datos);
-        Optional<Examen> examen = service.findExamenPorNombre("Matemáticas");
+        when(repository.findAll()).thenReturn(datos);//cuando se invoque findALL retorna una lista vacia
+        Optional<Examen> examen = service.findExamenPorNombre("Matematicas");
 
-        assertFalse(examen.isPresent());
+        assertFalse(examen.isPresent());//como es vacia la lista no encuentra matematicas
     }
 
+    @Test
+    void testPreguntasExamen() {
+        when(repository.findAll()).thenReturn(Datos.EXAMENES);//cuando se llame findAll retorna Examenes
+        when(preguntaRepository.findPreguntasPorExamenId(1L)).thenReturn(Datos.PREGUNTAS); //cuando se llame findPreguntas... con 1L retorna Preguntas otra forma retorna null
+        Examen examen = service.findExamenPorNombreConPreguntas("Matematicas"); //Matematicas tiene el ID 1L
+        assertEquals(5, examen.getPreguntas().size()); //hasta a hora son 5 preguntas en el examen de matematicas
+        assertTrue(examen.getPreguntas().contains("integrales"));//almenos debe contener integrales
+
+    }
 
 }
 
