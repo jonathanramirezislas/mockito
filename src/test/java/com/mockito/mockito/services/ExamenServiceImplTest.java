@@ -3,6 +3,7 @@ package com.mockito.mockito.services;
 import com.mockito.mockito.models.Examen;
 import com.mockito.mockito.repositories.ExamenRepository;
 import com.mockito.mockito.repositories.PreguntaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) //habilitamos la ijection de independecia sy mas
@@ -70,6 +72,33 @@ class ExamenServiceImplTest {
         assertEquals(5, examen.getPreguntas().size()); //hasta a hora son 5 preguntas en el examen de matematicas
         assertTrue(examen.getPreguntas().contains("integrales"));//almenos debe contener integrales
 
+    }
+
+    @Test
+    void testPreguntasExamenVerify() {
+        when(repository.findAll()).thenReturn(Datos.EXAMENES);
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(Datos.PREGUNTAS);
+        Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
+        assertEquals(5, examen.getPreguntas().size());
+        assertTrue(examen.getPreguntas().contains("integrales"));
+        //verify sirve para ver si los metodos fueron llamados
+        verify(repository).findAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(anyLong());
+
+    }
+
+    @Test
+    void testNoExisteExamenVerify() {
+        when(repository.findAll()).thenReturn(Collections.emptyList());//regresa una lista vacia de examenes
+        when(preguntaRepository.findPreguntasPorExamenId(anyLong())).thenReturn(Collections.emptyList());
+
+        //when
+        Examen examen = service.findExamenPorNombreConPreguntas("Matemáticas");
+
+        //then
+        assertNull(examen); //examen debe de ser null
+        verify(repository).findAll(); //almenos se debe de llamar
+       // verify(preguntaRepository).findPreguntasPorExamenId(5L); //daria error ya que no se debe de invocar este motodo
     }
 
 }
